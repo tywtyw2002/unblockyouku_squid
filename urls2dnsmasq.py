@@ -61,28 +61,41 @@ def usage():
     sys.exit()
     
 def main():
-    '''main: Main function
+    
+    import argparse
+    parser = argparse.ArgumentParser(description = 'Convert unblock url rules to squid\
+            dstdom_regex and dnsmasq conf.')
 
-    Description goes here.
-    '''
-    #check argv first
-    if len(sys.argv) != 4:
-        usage()
+    parser.add_argument("-s", "--squid", action='store_true', dest="squid",
+            help='generate squid config')
+    parser.add_argument('-d', "--dns", type=str, dest="dns",
+            help='generate dnsmasq config')
+
+    parser.add_argument("filename", metavar="FILENAME", action="store",
+            type=str,  help="output filename")
+    
+    args = parser.parse_args()
 
     url_db = parse_urls()
     
-    fp = open(sys.argv[2], "w")
-    sfp = open(sys.argv[3], "w")
-    for i in url_db:
-        #*.xxx url 
-        if i[:2] == "*.":
-            fp.write("address=/%s/%s\n" % (i[1:], sys.argv[1]))
-            sfp.write("(^|\.)%s$\n" % i[2:])
-        else:
-            fp.write("address=/%s/%s\n" % (i, sys.argv[1]))
-            sfp.write("^%s$\n" % i)
+    fp = open(args.filename, "w")
+    #fp = open(sys.argv[2], "w")
+    #sfp = open(sys.argv[3], "w")
+    if args:
+        for i in url_db:
+            #*.xxx url 
+            if i[:2] == "*.":
+                fp.write("(^|\.)%s$\n" % i[2:])
+            else:
+                fp.write("^%s$\n" % i)
+    else:
+        for i in url_db:
+            if i[:2] == "*.":
+                fp.write("address=/%s/%s\n" % (i[1:], args.dns))
+            else:
+                fp.write("address=/%s/%s\n" % (i, args.dns))
     fp.close()
-    sfp.close()
+    #sfp.close()
 
 
 if __name__ == '__main__':
