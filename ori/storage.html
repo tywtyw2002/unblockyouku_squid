@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Storage</title>
+</head>
+<body>
+	<script>
+	!function(){
+		if(parent == self) return
+	
+		function setStorage (key, value) {		
+			localStorage.setItem(key, value)
+			return value
+		}
+		function getStorage (key) {
+			return localStorage.getItem(key)
+		}	
+		function post (type, key, value, cid){
+			window.parent.postMessage(JSON.stringify({name: 'MAMA_STORAGE', type: type, key: key, value: value, cid: cid}), '*')
+		}
+		var StorageFN = {
+			  set: setStorage
+			, get: getStorage
+		}
+		window.addEventListener('message', function(e){
+			var data  = JSON.parse(e.data)
+			var type  = data.type
+			var key   = data.key
+			var value = data.value
+			var cid   = data.cid	
+			post(type, key, StorageFN[type](key, value), cid)
+		})
+		post('loaded')
+
+	}()
+	</script>
+</body>
+</html>
