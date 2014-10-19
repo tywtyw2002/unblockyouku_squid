@@ -1,0 +1,3 @@
+[submodule "clicktoplugin"]
+	path = clicktoplugin
+	url = git@github.com:tywtyw2002/clicktoplugin.git
