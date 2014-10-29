@@ -1,3 +1,6 @@
 [submodule "clicktoplugin"]
 	path = clicktoplugin
 	url = git@github.com:tywtyw2002/clicktoplugin.git
+[submodule "Unblock-Youku"]
+	path = Unblock-Youku
+	url = git@github.com:tywtyw2002/Unblock-Youku.git
